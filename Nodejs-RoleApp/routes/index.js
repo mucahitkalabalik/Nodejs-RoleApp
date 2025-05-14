@@ -1,10 +1,19 @@
-var express = require('express');
-const config = require('../config');
+var express = require("express");
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express',config });
+const fs = require("fs");
+
+let routes = fs.readdirSync("./routes");
+
+console.log("Routes: ", routes);
+
+
+routes.forEach((route) => {
+  if (route === "index.js") return;
+  let routeName = route.split(".")[0];
+  let routePath = `./${route}`;
+  let routeFile = require(routePath);
+  router.use(`/${routeName}`, routeFile);
 });
 
 module.exports = router;
